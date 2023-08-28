@@ -4,13 +4,6 @@ import java.util.Date;
 
 import com.leo.api.entities.Cliente;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-@Getter
 public class ClienteDAO {
 	
 	private Long id;

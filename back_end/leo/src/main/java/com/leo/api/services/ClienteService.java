@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.leo.api.dao.ClienteDAO;
 import com.leo.api.entities.Cliente;
@@ -15,33 +16,43 @@ public class ClienteService {
 	@Autowired
 	private ClienteRepository repo;
 	
+	@Transactional(readOnly = true)
 	public List<ClienteDAO> buscarTodosClientes(){
 		List<Cliente> obj = repo.findAll();
 		return obj.stream().map(ClienteDAO::new).toList();
 	}
 	
+	@Transactional(readOnly = true)
 	public ClienteDAO buscarClientePorID(Long id) {
-		if(repo.existsById(id) == true){
 			Cliente obj = repo.findById(id).get();
 			return new ClienteDAO(obj);
-		}else {
-			return null;
-		}
+		
 	}
 	
-	public ClienteDAO salvarCliente(Cliente cliente) {
+	@Transactional(readOnly = false)
+	public Cliente salvarCliente(Cliente cliente) {
 		Cliente obj = repo.save(cliente);
-		return new ClienteDAO(obj);
+		return obj;
 	}
 	
-	public ClienteDAO atualizarCliente(Cliente cliente) {
+	@Transactional(readOnly = false)
+	public Cliente atualizarCliente(Cliente cliente) {
 		Cliente obj = repo.save(cliente);
-		return new ClienteDAO(obj);
+		return obj;
 	}
 	
+	@Transactional(readOnly = false)
 	public void deletarCliente(Cliente cliente) {
 		if(repo.existsById(cliente.getId()) == true) {
 			repo.delete(cliente);
+		}
+	}
+	
+	public void deletarClientePorId(Long id) {
+		if(repo.existsById(id)) {
+			repo.deleteById(id);
+		}else {
+			
 		}
 	}
 
